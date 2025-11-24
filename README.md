@@ -63,3 +63,23 @@ Originalmente se planeó usar `$` como separador. Sin embargo, durante las prueb
 Siguiendo las recomendaciones de optimización:
 *   **FM-Index:** Se utiliza `csa_wt<wt_huff<rrr_vector<127>>>`. Esta combinación (Wavelet Tree de Huffman + RRR bit vector) ofrece una compresión superior para texto natural.
 *   **Mapeo de Documentos:** Se utiliza `sd_vector` (Sparse-Dense vector) para almacenar los límites de los documentos. Esto permite determinar a qué documento pertenece una posición en tiempo $O(1)$ con un consumo de memoria mínimo.
+## Experimentación
+Cada experimento fue repetido 32 veces haciendo uso de código obtenido desde el repositorio uhr por leonardlover (https://github.com/leonardlover/uhr/).
+El archivo get_patterns.py busca los 20 patrones más frecuentes y menos frecuentes (aunque con al menos una aparición), usando una limitación de 6 caracteres por patrón, guardándolos en patterns_common.txt y patterns_rare.txt, respectivamente.
+
+Se incluye el archivo DocumentFMIndex.cpp el cual es una versión editada para experimentación de Test_FM_index.cpp, de manera que las funciones puedan ser llamadas directamente desde el archivo que se encarga de realizar los experimentos.
+Para compilar uhr.cpp, se debe realizar:
+```bash
+g++ -std=c++17 -O2 uhr.cpp ../DocumentFMIndex.cpp -o uhr -lsdsl -ldivsufsort -ldivsufsort64
+```
+Para ejecutarlo:
+```bash
+./uhr resultados.csv 32 1 1 1
+```
+El patrón de búsqueda utilizado en cada experimento se especifica directamente en el código fuente, específicamente en uhr.cpp, en la llamada:
+```c++
+index.doc_locate("<patrón>");
+```
+Para la hipótesis 1, se hace uso del patrón de alta frecuencia (según lo previamente obtenido con get_patterns.py) "author" y el patrón de baja frecuencia "<?xml ". 
+Para la hipótesis 2, se hace uso del patrón inexistente en el dataset: "¿?--¿?". 
+Para la hipótesis 3, puesto que la memoria ocupada por cada estructura es determinista para un texto dado, la construcción repetida del índice no produce variaciones en el uso de memoria. Por esta razón, el valor reportado corresponde a una única medición representativa por archivo.

@@ -80,6 +80,13 @@ El patrón de búsqueda utilizado en cada experimento se especifica directamente
 ```c++
 index.doc_locate("<patrón>");
 ```
-Para la hipótesis 1, se hace uso del patrón de alta frecuencia (según lo previamente obtenido con get_patterns.py) "author" y el patrón de baja frecuencia "<?xml ". 
-Para la hipótesis 2, se hace uso del patrón inexistente en el dataset: "¿?--¿?". 
-Para la hipótesis 3, puesto que la memoria ocupada por cada estructura es determinista para un texto dado, la construcción repetida del índice no produce variaciones en el uso de memoria. Por esta razón, el valor reportado corresponde a una única medición representativa por archivo.
+- Para la hipótesis 1, se hace uso del patrón de alta frecuencia (según lo previamente obtenido con get_patterns.py) "author" y el patrón de baja frecuencia "<?xml ". 
+- Para la hipótesis 2, se hace uso del patrón inexistente en el dataset: "¿?--¿?". 
+- Para la hipótesis 3, puesto que la memoria ocupada por cada estructura es determinista para un texto dado, la construcción repetida del índice no produce variaciones en el uso de memoria. Por esta razón, el valor reportado corresponde a una única medición representativa por archivo. Además, se ha preparado un corpus especial para esta hipótesis, haciendo uso de prepare_corpus, compuesto exclusivamente de documentos presentes en el dataset de proteínas, limitando los directorios accedidos en la función main:
+```c++
+    for subdir in ['dblp', 'proteins', 'sources']:
+```
+Pasa a ser, solo para este caso:
+```c++
+    for subdir in ['proteins']:
+```
